@@ -10,10 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Chosen Palette: Papyrus & Ink -->
-    <!-- Application Structure Plan: A estrutura do guia foi otimizada para ser responsiva. O botão de download foi realocado para a barra de navegação, tornando-o acessível de qualquer lugar da página. A navegação foi transformada para um menu hambúrguer em dispositivos móveis. A seção de pontuação foi alterada para uma tabela estática com dados de exemplo. -->
-    <!-- Visualization & Content Choices: O documento é baseado em texto. A "visualização" é aprimorada através de um design responsivo. A transição da navegação para um menu hambúrguer e a apresentação das seções de pontuação e dicas lado a lado em desktop são exemplos de como a arquitetura de informação foi utilizada para melhorar a experiência do usuário. Método: HTML/CSS (Tailwind) e Vanilla JS para a interatividade. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -23,6 +19,7 @@
         .nav-link {
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
+            position: relative;
         }
         .nav-link.active, .nav-link:hover {
             color: #D97706;
@@ -47,6 +44,17 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        .pulse-animation {
+            animation: pulse-effect 1.5s infinite;
+        }
+        @keyframes pulse-effect {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -54,14 +62,17 @@
     <div class="container mx-auto px-4 py-8 max-w-5xl">
 
         <header class="text-center mb-10">
-            <!-- Espaço reservado para a logo do jogo. Substitua o link da imagem (src) pela URL da sua logo. -->
-            <div class="flex justify-center mb-4">
-                <img src="logo.png" alt="Logo do Jogo" class="max-h-40 md:max-h-45 ">
+            <!-- Título estilizado para o jogo, substituindo a logo genérica. -->
+            <div class="flex justify-center flex-col items-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-amber-700 leading-tight">
+                    Monte a Palavra
+                </h1>
+                <p class="mt-2 text-lg text-gray-600">Seu guia interativo para as regras do jogo</p>
             </div>
-            <p class="mt-2 text-lg text-gray-600">Seu guia interativo para as regras do jogo</p>
         </header>
 
         <nav class="sticky top-0 bg-opacity-90 bg-stone-100/80 backdrop-blur-sm z-10 rounded-lg shadow-sm mb-12">
+            <!-- Menu hambúrguer para dispositivos móveis -->
             <div class="md:hidden flex justify-end p-4">
                 <button id="hamburgerBtn" class="text-amber-700 focus:outline-none">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -69,6 +80,7 @@
                     </svg>
                 </button>
             </div>
+            <!-- Menu de navegação para desktop -->
             <ul id="mobileMenu" class="hidden md:flex flex-col md:flex-row items-center justify-center flex-wrap p-2 gap-2 md:gap-6 text-sm md:text-base">
                 <li><a href="#visao-geral" class="nav-link font-medium px-3 py-2">Visão Geral</a></li>
                 <li><a href="#como-jogar" class="nav-link font-medium px-3 py-2">Como Jogar</a></li>
@@ -111,7 +123,7 @@
 
             <section id="como-jogar" class="scroll-mt-24">
                 <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600 pb-2">Como Jogar</h2>
-                   <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+                    <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
                     <p class="text-base md:text-lg leading-relaxed">
                         Entenda o fluxo de uma rodada e as ações que cada jogador pode realizar. Esta seção detalha as regras de formação de palavras, como adicionar cartas a palavras já existentes na mesa e o que fazer quando não é possível realizar uma jogada.
                     </p>
@@ -149,21 +161,21 @@
                     <div id="bonus" class="tab-content">
                         <p class="text-gray-700 mb-4">Ao terminar suas cartas, o jogador deve pegar uma carta bônus, que possui uma ordem que deve ser executada imediatamente.</p>
                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div class="card p-4 rounded-lg shadow-sm">Indique um jogador para comprar uma carta.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Dê três cartas para o próximo jogador.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Tire uma carta da mão do jogador anterior.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Compre mais duas cartas para si.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Inverta o sentido do jogo.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Tire 3 cartas de quem tem mais e dê a quem tem menos.</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Os jogadores ao seu lado compram duas cartas.</div>
-                            <div class="card p-4 rounded-lg shadow-sm font-bold text-amber-700">Você venceu, automaticamente!</div>
-                            <div class="card p-4 rounded-lg shadow-sm">Escolha um jogador para passar a vez.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">👤</span>Indique um jogador para comprar uma carta.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">➡️</span>Dê três cartas para o próximo jogador.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">🤝</span>Tire uma carta da mão do jogador anterior.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">➕</span>Compre mais duas cartas para si.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">🔄</span>Inverta o sentido do jogo.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">📉</span>Tire 3 cartas de quem tem mais e dê a quem tem menos.</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">↔️</span>Os jogadores ao seu lado compram duas cartas.</div>
+                            <div class="card p-4 rounded-lg shadow-sm font-bold text-amber-700 flex items-center gap-3"><span class="text-3xl">👑</span>Você venceu, automaticamente!</div>
+                            <div class="card p-4 rounded-lg shadow-sm flex items-center gap-3"><span class="text-3xl">⏭️</span>Escolha um jogador para passar a vez.</div>
                         </div>
                     </div>
 
                     <div id="silencio" class="tab-content hidden">
                         <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg" role="alert">
-                            <h4 class="font-bold text-xl">🤫 Regra do Silêncio!</h4>
+                            <h4 class="font-bold text-xl flex items-center gap-2"><span class="text-3xl">🤫</span> Regra do Silêncio!</h4>
                             <p class="mt-2 text-lg">Quando esta carta é jogada, todos os jogadores devem permanecer em silêncio por uma rodada completa.</p>
                             <p class="mt-2 text-lg"><strong>Penalidade:</strong> Se um jogador falar, ele deverá comprar do monte um número de cartas igual ao número de palavras que disse.</p>
                         </div>
@@ -186,66 +198,64 @@
                 </div>
             </section>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <section id="pontuacao" class="scroll-mt-24">
-                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600 pb-2">Pontuação (Opcional)</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
-                        <p class="text-base md:text-lg leading-relaxed">
-                            Para partidas com muitos jogadores ou para criar um campeonato, pode ser interessante usar um sistema de pontos. O vencedor de cada rodada recebe a pontuação máxima e os demais recebem pontos conforme sua classificação. O vencedor final é aquele com a maior pontuação total após 3 rodadas. Veja a tabela de exemplo abaixo.
-                        </p>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white border border-gray-200 rounded-md shadow-sm">
-                                <thead>
-                                    <tr class="bg-amber-50 text-amber-800">
-                                        <th class="py-2 px-4 border-b">Jogador</th>
-                                        <th class="py-2 px-4 border-b text-center">Rodada 1</th>
-                                        <th class="py-2 px-4 border-b text-center">Rodada 2</th>
-                                        <th class="py-2 px-4 border-b text-center">Rodada 3</th>
-                                        <th class="py-2 px-4 border-b text-center">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="py-2 px-4 border-b font-medium text-gray-800">Jogador 1</td>
-                                        <td class="py-2 px-4 border-b text-center">5</td>
-                                        <td class="py-2 px-4 border-b text-center">4</td>
-                                        <td class="py-2 px-4 border-b text-center">5</td>
-                                        <td class="py-2 px-4 border-b text-center font-bold text-amber-700">14</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="py-2 px-4 border-b font-medium text-gray-800">Jogador 2</td>
-                                        <td class="py-2 px-4 border-b text-center">4</td>
-                                        <td class="py-2 px-4 border-b text-center">5</td>
-                                        <td class="py-2 px-4 border-b text-center">3</td>
-                                        <td class="py-2 px-4 border-b text-center font-bold text-amber-700">12</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="py-2 px-4 border-b font-medium text-gray-800">Jogador 3</td>
-                                        <td class="py-2 px-4 border-b text-center">3</td>
-                                        <td class="py-2 px-4 border-b text-center">1</td>
-                                        <td class="py-2 px-4 border-b text-center">4</td>
-                                        <td class="py-2 px-4 border-b text-center font-bold text-amber-700">8</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <section id="pontuacao" class="scroll-mt-24">
+                <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600 pb-2">Pontuação (Opcional)</h2>
+                <div class="text-base md:text-lg leading-relaxed">
+                    <p class="text-base md:text-lg leading-relaxed">
+                        Para partidas com muitos jogadores ou para criar um campeonato, pode ser interessante usar um sistema de pontos. O vencedor de cada rodada recebe a pontuação máxima e os demais recebem pontos conforme sua classificação. O vencedor final é aquele com a maior pontuação total após 3 rodadas. Veja a tabela de exemplo abaixo.
+                    </p>
+                    <div class="overflow-x-auto ">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-md shadow-sm">
+                            <thead>
+                                <tr class="bg-amber-50 text-amber-800">
+                                    <th class="py-2 px-4 border-b whitespace-nowrap">Jogador</th>
+                                    <th class="py-2 px-4 border-b text-center whitespace-nowrap">Rodada 1</th>
+                                    <th class="py-2 px-4 border-b text-center whitespace-nowrap">Rodada 2</th>
+                                    <th class="py-2 px-4 border-b text-center whitespace-nowrap">Rodada 3</th>
+                                    <th class="py-2 px-4 border-b text-center whitespace-nowrap">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2 px-4 border-b font-medium text-gray-800 whitespace-nowrap">Jogador 1</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">5</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">4</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">5</td>
+                                    <td class="py-2 px-4 border-b text-center font-bold text-amber-700 whitespace-nowrap">14</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2 px-4 border-b font-medium text-gray-800 whitespace-nowrap">Jogador 2</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">4</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">5</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">3</td>
+                                    <td class="py-2 px-4 border-b text-center font-bold text-amber-700 whitespace-nowrap">12</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2 px-4 border-b font-medium text-gray-800 whitespace-nowrap">Jogador 3</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">3</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">1</td>
+                                    <td class="py-2 px-4 border-b text-center whitespace-nowrap">4</td>
+                                    <td class="py-2 px-4 border-b text-center font-bold text-amber-700 whitespace-nowrap">8</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </section>
-                
-                <section id="dicas-adicionais" class="scroll-mt-24">
-                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600 pb-2">Dicas Adicionais</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
-                        <p class="text-base md:text-lg leading-relaxed">
-                            Esta seção traz algumas dicas e estratégias que podem te ajudar a ter um melhor desempenho no jogo.
-                        </p>
-                        <ul class="list-disc list-inside space-y-2 pt-2 text-lg text-gray-800">
-                            <li>Preste atenção às cartas bônus. Elas podem mudar o jogo a seu favor ou contra você.</li>
-                            <li>A "Carta Silêncio" é uma ótima forma de surpreender os outros jogadores. Use-a quando a conversa estiver intensa.</li>
-                            <li>Tente guardar as cartas mais versáteis para o final, para ter mais opções de fechar sua mão e vencer.</li>
-                        </ul>
-                    </div>
-                </section>
-            </div>
+                </div>
+            </section>
+            
+            <section id="dicas-adicionais" class="scroll-mt-24">
+                <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600">Dicas Adicionais</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+                    <p class="text-base md:text-lg leading-relaxed">
+                        Esta seção traz algumas dicas e estratégias que podem te ajudar a ter um melhor desempenho no jogo.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 pt-2 text-lg text-gray-800">
+                        <li>Preste atenção às cartas bônus. Elas podem mudar o jogo a seu favor ou contra você.</li>
+                        <li>A "Carta Silêncio" é uma ótima forma de surpreender os outros jogadores. Use-a quando a conversa estiver intensa.</li>
+                        <li>Tente guardar as cartas mais versáteis para o final, para ter mais opções de fechar sua mão e vencer.</li>
+                    </ul>
+                </div>
+            </section>
 
         </main>
 
@@ -257,6 +267,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Seleciona todos os botões de abas, conteúdos e links de navegação.
             const tabs = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
             const navLinks = document.querySelectorAll('.nav-link');
@@ -265,7 +276,10 @@
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             
-            // Lógica para as abas
+            /**
+             * Adiciona listeners para controlar a visibilidade das abas.
+             * A aba ativa recebe as classes de cor, enquanto a inativa é escondida.
+             */
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const target = tab.getAttribute('data-tab');
@@ -281,28 +295,34 @@
                 });
             });
 
-            // Lógica para o menu de navegação
+            /**
+             * Observa a seção de navegação para alternar a classe 'active' nos links.
+             * Isso é feito para destacar o link da seção visível na tela.
+             * Usamos 'IntersectionObserver' para um desempenho mais eficiente.
+             */
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         navLinks.forEach(link => {
+                            // Obtém o ID da seção do atributo href e compara com o ID da seção visível.
                             link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
                         });
                     }
                 });
             }, { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
 
+            // Inicia a observação para todas as seções do documento.
             document.querySelectorAll('section').forEach(section => {
                 observer.observe(section);
             });
 
-            // Toggle para o menu hambúrguer em dispositivos móveis
+            // Adiciona listener para o menu hambúrguer em dispositivos móveis.
             hamburgerBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
                 mobileMenu.classList.toggle('flex');
             });
 
-            // Fecha o menu móvel ao clicar em um link
+            // Fecha o menu móvel ao clicar em um link.
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (window.innerWidth < 768) {
@@ -312,11 +332,19 @@
                 });
             });
 
-            // Lógica para download de PDF
+            /**
+             * Lógica para gerar um PDF do conteúdo principal.
+             * Usa html2canvas para renderizar o HTML em uma imagem
+             * e jspdf para criar um documento PDF a partir dessa imagem.
+             * A lógica foi mantida para suportar a paginação de conteúdo.
+             */
             if (downloadPdfBtn) {
                 downloadPdfBtn.addEventListener('click', async () => {
+                    // Estado de carregamento do botão
                     downloadPdfBtn.textContent = 'Gerando PDF...';
                     downloadPdfBtn.disabled = true;
+                    downloadPdfBtn.classList.add('pulse-animation');
+
                     const { jsPDF } = window.jspdf;
 
                     try {
@@ -346,6 +374,7 @@
                     } finally {
                         downloadPdfBtn.textContent = 'Baixar PDF';
                         downloadPdfBtn.disabled = false;
+                        downloadPdfBtn.classList.remove('pulse-animation');
                     }
                 });
             }
