@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -44,15 +42,10 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .pulse-animation {
-            animation: pulse-effect 1.5s infinite;
-        }
-        @keyframes pulse-effect {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
+        /* Estilo para esconder elementos na impressão, se necessário */
+        @media print {
+            .no-print {
+                display: none;
             }
         }
     </style>
@@ -63,14 +56,12 @@
 
         <header class="text-center mb-10">
             <!-- Título estilizado para o jogo, substituindo a logo genérica. -->
-            <div class="flex justify-center mb-4">
-
-                <img src="logo.png" alt="Logo do Jogo" class="max-h-40 md:max-h-45 ">
-
-            </div>
+            <div class="flex justify-center mb-4">
+                <img src="logo.png" alt="Logo do Jogo" class="max-h-40 md:max-h-45 ">
+            </div>
         </header>
 
-        <nav class="sticky top-0 bg-opacity-90 bg-stone-100/80 backdrop-blur-sm z-10 rounded-lg shadow-sm mb-12">
+        <nav class="sticky top-0 bg-opacity-90 bg-stone-100/80 backdrop-blur-sm z-10 rounded-lg shadow-sm mb-12 no-print">
             <!-- Menu hambúrguer para dispositivos móveis -->
             <div class="md:hidden flex justify-end p-4">
                 <button id="hamburgerBtn" class="text-amber-700 focus:outline-none">
@@ -88,7 +79,7 @@
                 <li><a href="#pontuacao" class="nav-link font-medium px-3 py-2">Pontuação</a></li>
                 <li><a href="#dicas-adicionais" class="nav-link font-medium px-3 py-2">Dicas Adicionais</a></li>
                 <li>
-                    <button id="downloadPdfBtn" class="px-4 py-2 bg-amber-600 text-white font-bold rounded-lg shadow-md hover:bg-amber-700 transition-colors text-sm">
+                    <button id="printBtn" class="px-4 py-2 bg-amber-600 text-white font-bold rounded-lg shadow-md hover:bg-amber-700 transition-colors text-sm">
                         Baixar PDF
                     </button>
                 </li>
@@ -122,7 +113,7 @@
 
             <section id="como-jogar" class="scroll-mt-24">
                 <h2 class="text-3xl font-bold mb-4 border-b-2 border-amber-600 pb-2">Como Jogar</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+                <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
                     <p class="text-base md:text-lg leading-relaxed">
                         Entenda o fluxo de uma rodada e as ações que cada jogador pode realizar. Esta seção detalha as regras de formação de palavras, como adicionar cartas a palavras já existentes na mesa e o que fazer quando não é possível realizar uma jogada.
                     </p>
@@ -265,20 +256,15 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Seleciona todos os botões de abas, conteúdos e links de navegação.
+        document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
             const navLinks = document.querySelectorAll('.nav-link');
-            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
-            const mainContent = document.getElementById('main-content');
+            const printBtn = document.getElementById('printBtn');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const mobileMenu = document.getElementById('mobileMenu');
-            
-            /**
-             * Adiciona listeners para controlar a visibilidade das abas.
-             * A aba ativa recebe as classes de cor, enquanto a inativa é escondida.
-             */
+
+            // Alternância das abas
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const target = tab.getAttribute('data-tab');
@@ -294,34 +280,26 @@
                 });
             });
 
-            /**
-             * Observa a seção de navegação para alternar a classe 'active' nos links.
-             * Isso é feito para destacar o link da seção visível na tela.
-             * Usamos 'IntersectionObserver' para um desempenho mais eficiente.
-             */
+            // Destaque do menu ativo
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         navLinks.forEach(link => {
-                            // Obtém o ID da seção do atributo href e compara com o ID da seção visível.
-                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                            link.classList.toggle('active',
+                                link.getAttribute('href').substring(1) === entry.target.id);
                         });
                     }
                 });
-            }, { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
-
-            // Inicia a observação para todas as seções do documento.
+            }, {rootMargin: "-50% 0px -50% 0px", threshold: 0});
             document.querySelectorAll('section').forEach(section => {
                 observer.observe(section);
             });
 
-            // Adiciona listener para o menu hambúrguer em dispositivos móveis.
+            // Menu hambúrguer mobile
             hamburgerBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
                 mobileMenu.classList.toggle('flex');
             });
-
-            // Fecha o menu móvel ao clicar em um link.
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (window.innerWidth < 768) {
@@ -331,54 +309,13 @@
                 });
             });
 
-            /**
-             * Lógica para gerar um PDF do conteúdo principal.
-             * Usa html2canvas para renderizar o HTML em uma imagem
-             * e jspdf para criar um documento PDF a partir dessa imagem.
-             * A lógica foi mantida para suportar a paginação de conteúdo.
-             */
-            if (downloadPdfBtn) {
-                downloadPdfBtn.addEventListener('click', async () => {
-                    // Estado de carregamento do botão
-                    downloadPdfBtn.textContent = 'Gerando PDF...';
-                    downloadPdfBtn.disabled = true;
-                    downloadPdfBtn.classList.add('pulse-animation');
-
-                    const { jsPDF } = window.jspdf;
-
-                    try {
-                        const canvas = await html2canvas(mainContent, { scale: 2 });
-                        const imgData = canvas.toDataURL('image/png');
-                        const imgWidth = 210;
-                        const pageHeight = 297;
-                        const imgHeight = canvas.height * imgWidth / canvas.width;
-                        let heightLeft = imgHeight;
-
-                        const doc = new jsPDF('p', 'mm');
-                        let position = 0;
-
-                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-
-                        while (heightLeft > 0) {
-                            position = heightLeft - imgHeight;
-                            doc.addPage();
-                            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                            heightLeft -= pageHeight;
-                        }
-
-                        doc.save('monte-a-palavra-regras.pdf');
-                    } catch (error) {
-                        console.error("Erro ao gerar PDF:", error);
-                    } finally {
-                        downloadPdfBtn.textContent = 'Baixar PDF';
-                        downloadPdfBtn.disabled = false;
-                        downloadPdfBtn.classList.remove('pulse-animation');
-                    }
+            // Lógica de impressão nativa do navegador
+            if (printBtn) {
+                printBtn.addEventListener('click', () => {
+                    window.print();
                 });
             }
         });
     </script>
-
 </body>
 </html>
